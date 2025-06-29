@@ -15,15 +15,16 @@ sequenceDiagram
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
     activate server
-    server-->>browser: the Single page app JavaScript file
+    server-->>browser: JavaScript file
     deactivate server
 
-    Note right of browser: like the regular notes version, but now the JavaScript file is spa.js instead of main.js
+    Note right of browser: Like the regular notes version, but now the JavaScript file is spa.js instead of main.js
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    participant JavaScript
+    JavaScript->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
-    server-->>browser: [{ "content": "text", "date": "2025-06-27" }, ... ]
+    server-->>JavaScript: [{ "content": "text", "date": "2025-06-27" }, ... ]
     deactivate server    
 
-    Note right of browser: The browser renders the notes
+    Note right of JavaScript: Renders the notes
 ```
