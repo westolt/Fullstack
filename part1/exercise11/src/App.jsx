@@ -21,7 +21,6 @@ const StatisticLine = ({ text, value }) => {
 }
 
 const Statistics = ({ good, neutral, bad, all, average }) => {
-  console.log("Statistic work")
   if (all === 0) {
     return (
       <div>
