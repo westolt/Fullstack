@@ -1,0 +1,57 @@
+[1mdiff --git a/part1/exercise10/index.html b/part1/exercise10/index.html[m
+[1mindex 0c589ec..1e6a49f 100644[m
+[1m--- a/part1/exercise10/index.html[m
+[1m+++ b/part1/exercise10/index.html[m
+[36m@@ -8,6 +8,8 @@[m
+   </head>[m
+   <body>[m
+     <div id="root"></div>[m
+[31m-    <script type="module" src="/src/main.jsx"></script>[m
+[32m+[m[32m    <table>[m
+[32m+[m[32m      <script type="module" src="/src/main.jsx"></script>[m
+[32m+[m[32m    </table>[m
+   </body>[m
+ </html>[m
+[1mdiff --git a/part1/exercise10/src/App.jsx b/part1/exercise10/src/App.jsx[m
+[1mindex 2d21bcf..37a2873 100644[m
+[1m--- a/part1/exercise10/src/App.jsx[m
+[1m+++ b/part1/exercise10/src/App.jsx[m
+[36m@@ -13,9 +13,10 @@[m [mconst Button = ({ onClick, text }) => <button onClick=[m
+ [m
+ const StatisticLine = ({ text, value }) => {[m
+   return ([m
+[31m-    <div>[m
+[31m-      <p>{text} {value}</p>[m
+[31m-    </div>[m
+[32m+[m[32m    <tr>[m
+[32m+[m[32m      <td>{text}</td>[m
+[32m+[m[32m      <td>{value}</td>[m
+[32m+[m[32m    </tr>[m
+   )[m
+ }[m
+ [m
+[36m@@ -28,14 +29,16 @@[m [mconst Statistics = ({ good, neutral, bad, all, average }) => {[m
+     )[m
+   }[m
+   return ([m
+[31m-    <div>[m
+[31m-      <StatisticLine text="good" value ={good} />[m
+[31m-      <StatisticLine text="neutral" value ={neutral} />[m
+[31m-      <StatisticLine text="bad" value ={bad} />[m
+[31m-      <StatisticLine text="all" value ={all} />[m
+[31m-      <StatisticLine text="average" value ={average / all} />[m
+[31m-      <StatisticLine text="positive" value ={(good / all) * 100 + ' %'} />[m
+[31m-    </div>[m
+[32m+[m[32m    <table>[m
+[32m+[m[32m      <tbody>[m
+[32m+[m[32m        <StatisticLine text="good" value ={good} />[m
+[32m+[m[32m        <StatisticLine text="neutral" value ={neutral} />[m
+[32m+[m[32m        <StatisticLine text="bad" value ={bad} />[m
+[32m+[m[32m        <StatisticLine text="all" value ={all} />[m
+[32m+[m[32m        <StatisticLine text="average" value ={average / all} />[m
+[32m+[m[32m        <StatisticLine text="positive" value ={(good / all) * 100 + ' %'} />[m
+[32m+[m[32m      </tbody>[m
+[32m+[m[32m    </table>[m
+   )[m
+ }[m
+ [m
