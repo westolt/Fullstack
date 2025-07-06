@@ -11,7 +11,7 @@ const Header = ({ text }) => {
 const Button = ({ onClick, text }) => <button onClick=
   {onClick}>{text}</button>
 
-const GiveAnectode = ({votes, text}) => {
+const Anecdote = ({votes, text}) => {
   return(
   <div>
     <p>{text}</p>
@@ -53,11 +53,11 @@ const App = () => {
   return (
     <div>
       <Header text={'Anecdote of the day'} />
-      <GiveAnectode votes={votes[selected]} text={anecdotes[selected]} />
+      <Anecdote votes={votes[selected]} text={anecdotes[selected]} />
       <Button onClick={handleVotes} text='vote' />
       <Button onClick={handleAnecdote} text='Next anecdote'/>
       <Header text={'Anecdote with most votes'} />
-      <GiveAnectode votes={votes[mostVotes]} text={anecdotes[mostVotes]} />
+      <Anecdote votes={votes[mostVotes]} text={anecdotes[mostVotes]} />
     </div>
   )
 }
