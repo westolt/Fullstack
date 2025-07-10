@@ -7,12 +7,19 @@ const App = (props) => {
 
   const addPerson = (event) => {
     event.preventDefault()
+
     const personObject = {
       name: newName,
       id: String(persons.length + 1)
     }
 
-    setPersons(persons.concat(personObject))
+    const duplicate = persons.find(person => person.name === newName)
+
+    if (duplicate) {
+      return alert(`${newName} is already added to phonebook`)
+    }else{
+      setPersons(persons.concat(personObject))
+    }
     setNewName('')
   }
 
@@ -20,8 +27,6 @@ const App = (props) => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
-
-  const personsToShow = persons
 
   return (
     <div>
@@ -39,7 +44,7 @@ const App = (props) => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {personsToShow.map(person => 
+        {persons.map(person => 
           <Person key={person.id} person={person} />
         )}
       </ul>
