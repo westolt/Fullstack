@@ -1,0 +1,9 @@
+.basic p {
+    margin: 2px;
+}
+
+.flag {
+    width: 200px;
+    height: auto;
+    margin-top: auto;
+}
