@@ -96,7 +96,7 @@ const App = () => {
   }
 
   const removePersonOf = id => {
-    const person = persons.find(person => person.id == id)
+    const person = persons.find(person => person.id === id)
     
     if (window.confirm(`Delete ${person.name} ?`)){
       personService
