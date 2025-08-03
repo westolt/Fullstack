@@ -38,32 +38,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
-
-    const updatedPerson = {
-        name: body.name,
-        number: body.number,
-    }
-
-    Person.findOne({ number: body.number })
-    .then(duplicate => {
-        if (duplicate) {
-            return response.status(400).json({
-                error: `${body.number} is already added to phonebook`
-            })
-        }
-
-        Person.findByIdAndUpdate(request.params.id, updatedPerson)
-            .then(result => {
-            response.json(result)
-        })
-        .catch(error => next(error))
-    })
-    .catch(error => next(error))
-})
-
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (!body.name) {
@@ -97,6 +72,31 @@ app.post('/api/persons', (request, response) => {
         })
     })
         .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  Person.findOne({ number: number })
+    .then(duplicate => {
+      if (duplicate) {
+        return response.status(400).json({ error: `${number} is already added to phonebook` })
+      }
+
+      return Person.findByIdAndUpdate(
+        request.params.id,
+        { number },
+        { new: true }
+      )
+    })
+    .then(updatedPerson => {
+      if (updatedPerson) {
+        response.json(updatedPerson)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
