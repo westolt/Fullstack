@@ -32,7 +32,7 @@ const App = () => {
     }
 
     const duplicateName = persons.find(person => person.name === newName)
-    const duplicateNumber = persons.find(person => person.number === newNumber && person.name !== newName)
+    const duplicateNumber = persons.find(person => person.number === newNumber)
 
     if (!newName || !newNumber) {
       return alert(`Please fill in all the fields`)
