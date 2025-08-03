@@ -36,7 +36,16 @@ const App = () => {
 
     if (!newName || !newNumber) {
       return alert(`Please fill in all the fields`)
-    }else if (duplicateName && !duplicateNumber) {
+    }else if (duplicateNumber){
+      setMessage(
+          `${newNumber} is already added to phonebook`
+        )
+        setType('delete')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+    }else if (duplicateName) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         const updatedPerson = { ...duplicateName, number: newNumber }
         personService
@@ -67,15 +76,6 @@ const App = () => {
           setPersons(persons.filter(person => person.id !== duplicateName.id))
         })
       }
-    }else if (duplicateNumber){
-      setMessage(
-          `${newNumber} is already added to phonebook`
-        )
-        setType('delete')
-        setTimeout(() => {
-          setMessage(null)
-          setType(null)
-        }, 5000)
     }else{
       personService
       .create(personObject)
