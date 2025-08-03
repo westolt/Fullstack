@@ -46,7 +46,16 @@ const App = () => {
           setType(null)
         }, 5000)
     }else if (duplicateName) {
-      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+      if (duplicateNumber){
+      setMessage(
+          `${newNumber} is already added to phonebook`
+        )
+        setType('delete')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+      }else if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         const updatedPerson = { ...duplicateName, number: newNumber }
         personService
         .update(duplicateName.id, updatedPerson)
