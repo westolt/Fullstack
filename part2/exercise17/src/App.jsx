@@ -36,7 +36,7 @@ const App = () => {
 
     if (!newName || !newNumber) {
       return alert(`Please fill in all the fields`)
-    }else if (duplicateName) {
+    }else if (duplicateName && !duplicateNumber) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         const updatedPerson = { ...duplicateName, number: newNumber }
         personService
