@@ -75,7 +75,8 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const { name, number } = request.body
+  const body = request.body
+  const number = body.number
 
   Person.findOne({ number: number })
     .then(duplicate => {
