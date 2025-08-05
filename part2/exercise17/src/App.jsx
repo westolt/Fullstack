@@ -65,15 +65,16 @@ const App = () => {
             setNewNumber('')
         })
         .catch(error => {
-          setMessage(
-          `Information of ${newName} has already been removed from server`
-        )
+          const errorMessage = error.response.data.error || `Information of ${newName} has already been removed from server`
+          setMessage(errorMessage)
         setType('delete')
         setTimeout(() => {
           setMessage(null)
           setType(null)
         }, 5000)
+        if (error.response.status === 404) {
           setPersons(persons.filter(person => person.id !== duplicateName.id))
+        }
         })
       }
     }else{
@@ -91,6 +92,15 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        console.log(error.response.data)
+        setMessage(error.response.data.error)
+        setType('delete')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
       })
     }
   }
