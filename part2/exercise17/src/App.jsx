@@ -122,7 +122,7 @@ const App = () => {
         }, 5000)
         setPersons(persons.filter(person => person.id !== id))
     })
-    .catch(error => {
+    .catch(() => {
       setMessage(
           `Information of ${person.name} has already been removed from server`
         )
