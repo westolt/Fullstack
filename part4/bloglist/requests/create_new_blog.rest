@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-    "title": "Test",
-    "author": "Will",
-    "url": "asdf",
-    "likes": 3
+    "title": "How to train your horse",
+    "author": "Cowboy",
+    "url": "www.yeehaw.com",
+    "likes": null
 }
