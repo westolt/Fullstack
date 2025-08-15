@@ -34,32 +34,56 @@ test('a specific blog is within the returned blogs', async () => {
 })
 
 test('a valid blog can be added', async () => {
-    const newBlog = {
-      title: 'Hello friend!',
-      author: 'Friend',
-      url: 'www.friend.com',
-      likes: 8,
-    }
 
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
+  const userTest = await api
+  .post('/api/users')
+  .send({
+    username: 'testuser',
+    name: 'Test User',
+    password: 'xxxx'
+  })
 
-    const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length,
-    helper.initialBlogs.length + 1)
+  const userId = userTest.body.id
 
-    const titles = blogsAtEnd.map(b => b.title)
-    assert(titles.includes('Hello friend!'))
-})
-
-test('if likes property missing, it will default to the value 0', async () => {
   const newBlog = {
     title: 'Hello friend!',
     author: 'Friend',
-    url: 'www.friend.com'
+    url: 'www.friend.com',
+    likes: 8,
+    userId
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length,
+  helper.initialBlogs.length + 1)
+
+  const titles = blogsAtEnd.map(b => b.title)
+  assert(titles.includes('Hello friend!'))
+})
+
+test('if likes property missing, it will default to the value 0', async () => {
+
+  const userTest = await api
+  .post('/api/users')
+  .send({
+    username: 'testuser',
+    name: 'Test User',
+    password: 'xxxx'
+  })
+
+  const userId = userTest.body.id
+  
+  const newBlog = {
+    title: 'Hello friend!',
+    author: 'Friend',
+    url: 'www.friend.com',
+    userId
   }
 
   await api

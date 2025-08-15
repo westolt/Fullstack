@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-    "title": "How to train your horse",
-    "author": "Cowboy",
-    "url": "www.yeehaw.com",
-    "likes": null
+    "title": "ABC",
+    "author": "Aatu Aakkoset",
+    "url": "www.abc.com",
+    "likes": 2,
+    "userId": "689f259e54bb5f83a8ef0cc3"
 }
