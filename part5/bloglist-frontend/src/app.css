@@ -14,3 +14,11 @@
 .notification.error {
   color: rgb(160, 26, 26);
 }
+
+.blogStyle {
+  padding-top: 10px;
+  padding-left: 2px;
+  border: solid;
+  border-width: 1px;
+  margin-bottom: 5px;
+}

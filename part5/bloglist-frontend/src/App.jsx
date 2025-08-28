@@ -5,21 +5,21 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
-import './index.css'
+import './app.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [type, setType] = useState(null)
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogVisible, setBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -59,18 +59,18 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try{
       const newBlog = await blogService.create(blogObject)
-    if (newBlog) {
-      setMessage(
-        `a new blog ${newBlog.title} by ${newBlog.author} added`
-      )
-      setType('add')
-      setTimeout(() => {
-        setMessage(null)
-        setType(null)
-      }, 5000)
-      setBlogs(blogs.concat(newBlog))
-      setBlogVisible(false)
-    }
+      if (newBlog) {
+        setMessage(
+          `a new blog ${newBlog.title} by ${newBlog.author} added`
+        )
+        setType('add')
+        setTimeout(() => {
+          setMessage(null)
+          setType(null)
+        }, 5000)
+        setBlogs(blogs.concat({ ...newBlog, user }))
+        setBlogVisible(false)
+      }
     } catch (exception) {
       setMessage('error creating blog')
       setType('error')
@@ -85,18 +85,18 @@ const App = () => {
     const hideWhenVisible = { display: blogVisible ? 'none' : '' }
     const showWhenVisible = { display: blogVisible ? '' : 'none' }
 
-      return (
-        <div>
-          <div style={hideWhenVisible}>
-            <button onClick={() => setBlogVisible(true)}>create new blog</button>
-          </div>
-          <div style={showWhenVisible}>
-            <BlogForm createBlog={addBlog}/>
-              <button onClick={() =>
-                setBlogVisible(false)}>cancel</button>
-          </div>
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setBlogVisible(true)}>create new blog</button>
         </div>
-      )
+        <div style={showWhenVisible}>
+          <BlogForm createBlog={addBlog}/>
+          <button onClick={() =>
+            setBlogVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
   }
 
   if (user === null) {
@@ -109,9 +109,21 @@ const App = () => {
     )
   }
 
+  const handleBlogUpdate = (updatedBlog) => {
+    setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+  }
+
+  const handleBlogRemoval = (removedBlogId) => {
+    setBlogs(blogs.filter(blog => blog.id !== removedBlogId))
+  }
+
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+  }
+
+  const order = (a, b) => {
+    return b.likes - a.likes
   }
 
   return (
@@ -119,12 +131,12 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} type={type} />
       {user && <div>
-       <p>{user.name} logged in<button onClick={handleLogout}>logout</button></p>
+        <p>{user.name} logged in<button onClick={handleLogout}>logout</button></p>
       </div>
       }
       {blogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+      {[...blogs].sort(order).map(blog =>
+        <Blog key={blog.id} blog={blog} user={user} updateBlog={handleBlogUpdate} removeBlog={handleBlogRemoval} />
       )}
     </div>
   )
