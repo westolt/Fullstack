@@ -139,7 +139,7 @@ const App = () => {
         <p>no blogs</p>
       ) : (
         [...blogs].sort(order).map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} updateBlog={handleBlogUpdate} removeBlog={handleBlogRemoval} />
+          <Blog key={blog.id} blog={blog} user={user} updateBlog={handleBlogUpdate} removeBlog={handleBlogRemoval} />
         )
       )}
     </div>
