@@ -135,8 +135,12 @@ const App = () => {
       </div>
       }
       {blogForm()}
-      {[...blogs].sort(order).map(blog =>
+      {blogs.length === 0 ? (
+        <p>no blogs</p>
+      ) : (
+        [...blogs].sort(order).map(blog =>
         <Blog key={blog.id} blog={blog} user={user} updateBlog={handleBlogUpdate} removeBlog={handleBlogRemoval} />
+        )
       )}
     </div>
   )
