@@ -13,8 +13,8 @@ const AnecdoteList = () => {
     })
     const dispatch = useDispatch()
 
-    const vote = (anecdote) => {
-      dispatch(voteAnecdote(anecdote.id))
+    const vote = async (anecdote) => {
+      dispatch(voteAnecdote(anecdote))
       dispatch(showNotification(`you voted '${anecdote.content}'`, 5))
     }
     const sorted_anecdotes = [...anecdotes].sort((a,b) => b.votes - a.votes)
