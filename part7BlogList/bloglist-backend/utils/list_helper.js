@@ -1,31 +1,31 @@
 const dummy = (blogs) => {
-  return 1
-}
+  return 1;
+};
 
 const totalLikes = (blogs) => {
-  let sum = 0
+  let sum = 0;
   for (let i = 0; i < blogs.length; i++) {
-    sum += blogs[i].likes
+    sum += blogs[i].likes;
   }
-  return sum
-}
+  return sum;
+};
 
 const favouriteBlog = (blogs) => {
   if (blogs.length === 0) {
-    return null
+    return null;
   }
 
-  let best = 0
+  let best = 0;
   for (let i = 0; i < blogs.length; i++) {
     if (blogs[i].likes > best) {
-      best = blogs[i].likes
+      best = blogs[i].likes;
     }
   }
-  return best
-}
+  return best;
+};
 
 module.exports = {
   dummy,
   totalLikes,
   favouriteBlog,
-}
+};
