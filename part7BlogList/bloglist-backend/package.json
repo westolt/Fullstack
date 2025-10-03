@@ -1,0 +1,28 @@
+{
+  "name": "bloglist",
+  "version": "0.0.1",
+  "description": "",
+  "main": "init.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env  NODE_ENV=test node --test",
+    "lint": "eslint .",
+    "start:test": "cross-env NODE_ENV=test node --watch index.js"
+  },
+  "author": "William Stolt",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "supertest": "^7.1.4"
+  }
+}
