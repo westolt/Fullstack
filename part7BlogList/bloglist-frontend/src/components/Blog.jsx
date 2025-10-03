@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import blogService from '../services/blogs'
-import '../app.css'
+import { useState } from "react";
+import blogService from "../services/blogs";
+import "../app.css";
 
 const Blog = ({ blog, user, updateBlog, removeBlog }) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   const handleLike = async () => {
     const updatedBlog = {
@@ -15,41 +15,40 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-      user: blog.user.id
-    }
+      user: blog.user.id,
+    };
     try {
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
-      updateBlog({ ...returnedBlog, user: blog.user })
+      const returnedBlog = await blogService.update(blog.id, updatedBlog);
+      updateBlog({ ...returnedBlog, user: blog.user });
     } catch (error) {
-      console.error('error liking blog', error)
+      console.error("error liking blog", error);
     }
-  }
+  };
 
   const handleRemoval = async () => {
-    const query = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+    const query = window.confirm(`Remove blog ${blog.title} by ${blog.author}`);
     if (!query) {
-      return
+      return;
     }
     try {
-      await blogService.remove(blog.id)
-      removeBlog(blog.id)
+      await blogService.remove(blog.id);
+      removeBlog(blog.id);
     } catch (error) {
-      console.error('error removing blog', error)
+      console.error("error removing blog", error);
     }
-  }
+  };
 
-  return(
+  return (
     <div className="blogStyle">
       {blog.title} {blog.author}
-      <button onClick={toggleVisibility}>
-        {visible ? 'hide' : 'view'}
-      </button>
-
+      <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
       {visible && (
         <div>
-          <a href={blog.url} target="_blank">{blog.url}</a>
+          <a href={blog.url} target="_blank">
+            {blog.url}
+          </a>
           <div>
-          likes {blog.likes}
+            likes {blog.likes}
             <button onClick={handleLike}>like</button>
           </div>
           <div>{blog.user.name}</div>
@@ -59,7 +58,7 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;

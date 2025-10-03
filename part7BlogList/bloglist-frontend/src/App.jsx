@@ -1,89 +1,70 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
-import BlogForm from './components/BlogForm'
-import './app.css'
+import { useState, useEffect } from "react";
+import Blog from "./components/Blog";
+import blogService from "./services/blogs";
+import loginService from "./services/login";
+import LoginForm from "./components/LoginForm";
+import Notification from "./components/Notification";
+import BlogForm from "./components/BlogForm";
+import { useDispatch } from 'react-redux'
+import { showNotification } from './reducers/notificationReducer'
+import "./app.css";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState(null)
-  const [type, setType] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
-  const [blogVisible, setBlogVisible] = useState(false)
+  const [blogs, setBlogs] = useState([]);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
+  const [blogVisible, setBlogVisible] = useState(false);
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
-  }, [])
+    blogService.getAll().then((blogs) => setBlogs(blogs));
+  }, []);
 
   useEffect(() => {
-    const loggedUserJSON =
-    window.localStorage.getItem('loggedBlogappUser')
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
     }
-  }, [])
+  }, []);
 
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
       const user = await loginService.login({
-        username, password,
-      })
+        username,
+        password,
+      });
 
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      blogService.setToken(user.token);
+      setUser(user);
+      setUsername("");
+      setPassword("");
     } catch (exception) {
-      setMessage('wrong username or password')
-      setType('error')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(showNotification(`wrong username or password`, 5))
     }
-    console.log('logging in with', username, password)
-  }
+    console.log("logging in with", username, password);
+  };
 
   const addBlog = async (blogObject) => {
-    try{
-      const newBlog = await blogService.create(blogObject)
+    try {
+      const newBlog = await blogService.create(blogObject);
       if (newBlog) {
-        setMessage(
-          `a new blog ${newBlog.title} by ${newBlog.author} added`
-        )
-        setType('add')
-        setTimeout(() => {
-          setMessage(null)
-          setType(null)
-        }, 5000)
-        setBlogs(blogs.concat({ ...newBlog, user }))
-        setBlogVisible(false)
+        dispatch(showNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`, 5));
+        setBlogs(blogs.concat({ ...newBlog, user }));
+        setBlogVisible(false);
       }
     } catch (exception) {
-      setMessage('error creating blog')
-      setType('error')
-      setTimeout(() => {
-        setMessage(null)
-        setType(null)
-      }, 5000)
+      dispatch(showNotification("error creating blog"));
     }
-  }
+  };
 
   const blogForm = () => {
-    const hideWhenVisible = { display: blogVisible ? 'none' : '' }
-    const showWhenVisible = { display: blogVisible ? '' : 'none' }
+    const hideWhenVisible = { display: blogVisible ? "none" : "" };
+    const showWhenVisible = { display: blogVisible ? "" : "none" };
 
     return (
       <div>
@@ -91,59 +72,77 @@ const App = () => {
           <button onClick={() => setBlogVisible(true)}>create new blog</button>
         </div>
         <div style={showWhenVisible}>
-          <BlogForm createBlog={addBlog}/>
-          <button onClick={() =>
-            setBlogVisible(false)}>cancel</button>
+          <BlogForm createBlog={addBlog} />
+          <button onClick={() => setBlogVisible(false)}>cancel</button>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={message} type={type} />
-        <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword}/>
+        <Notification />
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+        />
       </div>
-    )
+    );
   }
 
   const handleBlogUpdate = (updatedBlog) => {
-    setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
-  }
+    setBlogs(
+      blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog)),
+    );
+  };
 
   const handleBlogRemoval = (removedBlogId) => {
-    setBlogs(blogs.filter(blog => blog.id !== removedBlogId))
-  }
+    setBlogs(blogs.filter((blog) => blog.id !== removedBlogId));
+  };
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
-  }
+    window.localStorage.removeItem("loggedBlogappUser");
+    setUser(null);
+  };
 
   const order = (a, b) => {
-    return b.likes - a.likes
-  }
+    return b.likes - a.likes;
+  };
 
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} type={type} />
-      {user && <div>
-        <p>{user.name} logged in<button onClick={handleLogout}>logout</button></p>
-      </div>
-      }
+      <Notification />
+      {user && (
+        <div>
+          <p>
+            {user.name} logged in<button onClick={handleLogout}>logout</button>
+          </p>
+        </div>
+      )}
       {blogForm()}
       {blogs.length === 0 ? (
         <p>no blogs</p>
       ) : (
-        [...blogs].sort(order).map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} updateBlog={handleBlogUpdate} removeBlog={handleBlogRemoval} />
-        )
+        [...blogs]
+          .sort(order)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              updateBlog={handleBlogUpdate}
+              removeBlog={handleBlogRemoval}
+            />
+          ))
       )}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

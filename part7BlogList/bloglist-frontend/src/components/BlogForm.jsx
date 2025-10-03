@@ -1,41 +1,44 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 const BlogForm = ({ createBlog }) => {
-  const [newTitle, setTitle] = useState('')
-  const [newAuthor, setAuthor] = useState('')
-  const [newUrl, setUrl] = useState('')
+  const [newTitle, setTitle] = useState("");
+  const [newAuthor, setAuthor] = useState("");
+  const [newUrl, setUrl] = useState("");
 
   const addBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     createBlog({
       title: newTitle,
       author: newAuthor,
-      url: newUrl
-    })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
-  return(
+      url: newUrl,
+    });
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+  };
+  return (
     <div>
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         <div className="title">
-            title: <input
+          title:{" "}
+          <input
             value={newTitle}
-            onChange={event => setTitle(event.target.value)}
+            onChange={(event) => setTitle(event.target.value)}
           />
         </div>
         <div className="author">
-            author: <input
+          author:{" "}
+          <input
             value={newAuthor}
-            onChange={event => setAuthor(event.target.value)}
+            onChange={(event) => setAuthor(event.target.value)}
           />
         </div>
         <div className="url">
-            url: <input
+          url:{" "}
+          <input
             value={newUrl}
-            onChange={event => setUrl(event.target.value)}
+            onChange={(event) => setUrl(event.target.value)}
           />
         </div>
         <div>
@@ -43,7 +46,7 @@ const BlogForm = ({ createBlog }) => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default BlogForm
+export default BlogForm;
