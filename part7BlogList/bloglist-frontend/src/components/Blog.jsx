@@ -1,41 +1,22 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
+import { useDispatch } from "react-redux";
 import "../app.css";
+import { likeBlog, deleteBlog } from "../reducers/blogReducer";
 
-const Blog = ({ blog, user, updateBlog, removeBlog }) => {
+const Blog = ({ blog, user }) => {
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleVisibility = () => {
     setVisible(!visible);
   };
 
-  const handleLike = async () => {
-    const updatedBlog = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes + 1,
-      user: blog.user.id,
-    };
-    try {
-      const returnedBlog = await blogService.update(blog.id, updatedBlog);
-      updateBlog({ ...returnedBlog, user: blog.user });
-    } catch (error) {
-      console.error("error liking blog", error);
-    }
+  const handleLike = () => {
+    dispatch(likeBlog(blog));
   };
 
   const handleRemoval = async () => {
-    const query = window.confirm(`Remove blog ${blog.title} by ${blog.author}`);
-    if (!query) {
-      return;
-    }
-    try {
-      await blogService.remove(blog.id);
-      removeBlog(blog.id);
-    } catch (error) {
-      console.error("error removing blog", error);
-    }
+    dispatch(deleteBlog(blog));
   };
 
   return (

@@ -1,65 +1,47 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addBlog, initializeBlogs } from "./reducers/blogReducer";
+import { initializeLogin, login, logout } from "./reducers/loginReducer";
 import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
+import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
-import { useDispatch } from 'react-redux'
-import { showNotification } from './reducers/notificationReducer'
 import "./app.css";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.login);
   const [blogVisible, setBlogVisible] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blog);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    dispatch(initializeBlogs());
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
+    dispatch(initializeLogin());
   }, []);
+
+  const handleAddBlog = (blogObject) => {
+    dispatch(addBlog(blogObject, user));
+    setBlogVisible(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
-    } catch (exception) {
-      dispatch(showNotification(`wrong username or password`, 5))
-    }
-    console.log("logging in with", username, password);
+    dispatch(login(username, password));
+    setUsername("");
+    setPassword("");
   };
 
-  const addBlog = async (blogObject) => {
-    try {
-      const newBlog = await blogService.create(blogObject);
-      if (newBlog) {
-        dispatch(showNotification(`a new blog ${newBlog.title} by ${newBlog.author} added`, 5));
-        setBlogs(blogs.concat({ ...newBlog, user }));
-        setBlogVisible(false);
-      }
-    } catch (exception) {
-      dispatch(showNotification("error creating blog"));
-    }
+  const order = (a, b) => {
+    return b.likes - a.likes;
   };
 
   const blogForm = () => {
@@ -72,7 +54,7 @@ const App = () => {
           <button onClick={() => setBlogVisible(true)}>create new blog</button>
         </div>
         <div style={showWhenVisible}>
-          <BlogForm createBlog={addBlog} />
+          <BlogForm createBlog={handleAddBlog} />
           <button onClick={() => setBlogVisible(false)}>cancel</button>
         </div>
       </div>
@@ -95,25 +77,6 @@ const App = () => {
     );
   }
 
-  const handleBlogUpdate = (updatedBlog) => {
-    setBlogs(
-      blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog)),
-    );
-  };
-
-  const handleBlogRemoval = (removedBlogId) => {
-    setBlogs(blogs.filter((blog) => blog.id !== removedBlogId));
-  };
-
-  const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogappUser");
-    setUser(null);
-  };
-
-  const order = (a, b) => {
-    return b.likes - a.likes;
-  };
-
   return (
     <div>
       <h2>blogs</h2>
@@ -131,15 +94,7 @@ const App = () => {
       ) : (
         [...blogs]
           .sort(order)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              updateBlog={handleBlogUpdate}
-              removeBlog={handleBlogRemoval}
-            />
-          ))
+          .map((blog) => <Blog key={blog.id} blog={blog} user={user} />)
       )}
     </div>
   );
