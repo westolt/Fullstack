@@ -1,3 +1,5 @@
+import { useEffect } from "react"
+
 const Header = (props) => {
   console.log(props)
   return (
@@ -39,7 +41,7 @@ const Total = (props) => {
 }
 
 const App = () => {
-  console.log('App component is running')
+  console.log('1')
   const course = {
     name: 'Half Stack application development',
     parts: [
@@ -57,6 +59,14 @@ const App = () => {
       }
     ]
   }
+  useEffect(() => {
+    console.log('2')
+    setTimeout(() => {
+      console.log('3')
+    }, 1000)
+    console.log('4')
+  })
+  console.log('5')
 
   return (
     <div>
