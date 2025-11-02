@@ -1,22 +1,34 @@
-const mongoose = require('mongoose')
+const { Model, DataTypes } = require('sequelize')
+const { sequelize } = require('../util/db')  // tämä tiedosto luodaan kohta
 
-const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+class Blog extends Model {}
+
+Blog.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  author: {
+    type: DataTypes.TEXT
+  },
+  url: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  title: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  likes: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   }
+}, {
+  sequelize,
+  underscored: true,
+  timestamps: false,
+  modelName: 'blog'
 })
 
-blogSchema.set('toJSON', {
-  transform: (document, returnObject) => {
-    returnObject.id = returnObject._id.toString()
-    delete returnObject._id
-    delete returnObject.__v
-  }
-})
-
-module.exports = mongoose.model('Blog', blogSchema)
+module.exports = Blog
