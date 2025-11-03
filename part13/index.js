@@ -1,10 +1,3 @@
-// const app = require('./app')
-// const config = require('./utils/config')
-// const logger = require('./utils/logger')
-
-// app.listen(config.PORT, () => {
-//   logger.info(`Server running on port ${config.PORT}`)
-// })
 require('dotenv').config()
 const { Sequelize, Model, DataTypes } = require('sequelize')
 const express = require('express')
@@ -46,6 +39,7 @@ Blog.init({
 
 app.get('/api/blogs', async (req, res) => {
   const blogs = await Blog.findAll()
+  console.log(blogs.map(b=>b.toJSON()))
   res.json(blogs)
 })
 
@@ -55,6 +49,28 @@ app.post('/api/blogs', async (req, res) => {
     return res.json(blog)
   } catch (error) {
     return res.status(400).json({error})
+  }
+})
+
+app.get('/api/blogs/:id', async (req, res) => {
+  const blog = await Blog.findByPk(req.params.id)
+  if (blog) {
+    console.log(blog.toJSON())
+    res.json(blog)
+  } else {
+    res.status(404).end()
+  }
+})
+
+app.delete('/api/blogs/:id', async (req, res) => {
+  const blog = await Blog.findByPk(req.params.id)
+  if (blog) {
+    console.log(`Deleting blog: ${blog.toJSON()}`)
+    await blog.destroy()
+    res.status(204).end()
+  } else {
+    console.log('Blog not found')
+    res.status(404).end()
   }
 })
 
