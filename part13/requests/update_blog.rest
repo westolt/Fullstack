@@ -1,9 +1,6 @@
-PUT http://localhost:3003/api/blogs/6898c64855f8c3eaf7b3cea5
+PUT http://localhost:3000/api/blogs/abc
 Content-Type: application/json
 
 {
-    "title": "How to train your horse",
-    "author": "Cowboy",
-    "url": "www.yeehaw.com",
     "likes": 6
 }
