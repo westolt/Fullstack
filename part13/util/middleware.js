@@ -1,6 +1,7 @@
 const logger = require('./logger')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const { SECRET } = require('../util/config')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -10,12 +11,18 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    request.token = authorization.replace('Bearer ', '')
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    try {
+      console.log(authorization.substring(7))
+      req.decodedToken = jwt.verify(authorization.substring(7), SECRET)
+    } catch (error){
+      console.log(error)
+      return res.status(401).json({ error: 'token invalid' })
+    }
   } else {
-    request.token = null
+    return res.status(401).json({ error: 'token missing' })
   }
   next()
 }
@@ -49,7 +56,7 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'SequelizeDatabaseError') {
     return response.status(400).json({ error: 'malformatted id' })
   } else if (error.name === 'SequelizeValidationError') {
-    return response.status(400).json({ error: error.message })
+    return response.status(400).json({ error: error.errors[0].message })
   }
 
   next(error)

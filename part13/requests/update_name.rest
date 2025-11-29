@@ -1,0 +1,6 @@
+PUT http://localhost:3000/api/users/masa
+Content-Type: application/json
+
+{
+
+}

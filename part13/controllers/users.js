@@ -1,42 +1,50 @@
-const bcrypt = require('bcrypt')
-const usersRouter = require('express').Router()
-const User = require('../models/user')
+const router = require('express').Router()
 
-usersRouter.post('/', async (request, response) => {
-  const { username, name, password } = request.body
+const { User, Blog } = require('../models')
 
-  if (!password || password.length < 3) {
-    return response.status(400).json({ error: 'Password must be at least 3 characters long'})
+router.get('/', async (req, res) => {
+  const users = await User.findAll({
+    include: {
+      model: Blog,
+      attributes: { exclude: ['userId'] }
+    }
+  })
+  res.json(users)
+})
+
+router.post('/', async (req, res) => {
+  const user = await User.create(req.body)
+  res.json(user)
+})
+
+router.get('/:id', async (req, res) => {
+  const user = await User.findByPk((req.params.id), {
+    include: {
+      model: Blog,
+      attributes: { exclude: ['userId'] }
+    }
+  })
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404).end()
   }
+})
 
-  if (!username || username.length < 3) {
-    return response.status(400).json({ error: 'Username must be at least 3 characters long'})
-  }
-
-  const duplicateUsername = await User.findOne({ username }) 
-  if (duplicateUsername) {
-    return response.status(400).json({ error: 'Username must be unique'})
-  }
-
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-
-  const user = new User({
-    username,
-    name,
-    passwordHash,
+router.put('/:username', async (req, res) => {
+  const user = await User.findOne({
+    where: {
+      username: req.params.username
+    }
   })
 
-  const savedUser = await user.save()
-
-  response.status(201).json(savedUser)
+  if (user) {
+    user.name = req.body.name
+    await user.save()
+    res.json(user)
+  } else {
+    res.status(404).end()
+  }
 })
 
-usersRouter.get('/', async (request, response) => {
-  const users = await User
-    .find({}).populate('blogs', { title: 1, author: 1, url: 1 })
-
-  response.json(users)
-})
-
-module.exports = usersRouter
+module.exports = router
