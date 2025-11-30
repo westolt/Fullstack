@@ -1,10 +1,10 @@
 POST http://localhost:3000/api/blogs/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hc2EiLCJpZCI6MSwiaWF0IjoxNzY0NDQyMTA3fQ.ORTy9bcp1WxwPnnPKhpqjNyeKDbw81m8F7z67gNXaU0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5lbGxpQGdtYWlsLmNvbSIsImlkIjoyLCJpYXQiOjE3NjQ1MDYzNjR9.Um3sU_eU7eC8Wy0pg3GLeRQ2IwTsb_XWPL2In5aDez0
 
 {
-    "title": "ABC",
-    "author": "Aatu Aakkonen",
-    "url": "www.abc.com",
-    "likes": 2
+    "title": "This is working!!!",
+    "author": "Happy Girl",
+    "url": "www.hg.com",
+    "likes": 3
 }
