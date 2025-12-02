@@ -30,6 +30,12 @@ blogsRouter.get('/', async (req, res) => {
 
 blogsRouter.post('/', tokenExtractor, async (req, res) => {
   const user = await User.findByPk(req.decodedToken.id)
+  const year = req.body.year
+  if (year < 1991 || year > new Date().getFullYear()) {
+    return res.status(400).json({
+      error: 'The year must be between 1991 and current year'
+    })
+  }
   const blog = await Blog.create({ ...req.body,
     userId: user.id,
     date: new Date()
