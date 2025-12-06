@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const ActiveSession = require('../models/active_session')
 const { tokenExtractor } = require('../util/middleware')
 const { Op } = require('sequelize')
 
@@ -29,6 +30,14 @@ blogsRouter.get('/', async (req, res) => {
 })
 
 blogsRouter.post('/', tokenExtractor, async (req, res) => {
+  const activeSession = await ActiveSession.findOne({
+    where: { token: req.token }
+  })
+
+  if (!activeSession) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
   const user = await User.findByPk(req.decodedToken.id)
   const year = req.body.year
   if (year < 1991 || year > new Date().getFullYear()) {
@@ -64,6 +73,14 @@ blogsRouter.get('/:id', blogFinder, async (req, res) => {
 })
 
 blogsRouter.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
+  const activeSession = await ActiveSession.findOne({
+    where: { token: req.token }
+  })
+
+  if (!activeSession) {
+    return res.status(401).json({ error: 'token missing or invalid' })
+  }
+
   const user = await User.findByPk(req.decodedToken.id)
   const blogUserId = req.blog.userId
   if (user.id !== blogUserId) {
