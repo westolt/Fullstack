@@ -21,15 +21,15 @@ const validateArguments = (args: string[]): InputValues => {
     const num = Number(arg);
     if (isNaN(num)) throw new Error('All daily values must be numbers!');
     return num;
-  })
+  });
 
   if (isNaN(targetValue)) throw new Error('Target value must be a number!');
 
   return {
     targetValue: targetValue,
     dailyValue: dailyValue
-  }
-}
+  };
+};
 
 const calculateExercises = (dailyExerciseHours: number[], target: number): Result => {
     const periodLength: number = dailyExerciseHours.length;
@@ -42,13 +42,13 @@ const calculateExercises = (dailyExerciseHours: number[], target: number): Resul
 
     if (divided >= 1) {
         rating = 3;
-        ratingDescription = 'Good job!'
+        ratingDescription = 'Good job!';
     } else if (divided >= 0.5) {
         rating = 2;
-        ratingDescription = 'Not too bad but could be better'
+        ratingDescription = 'Not too bad but could be better';
     } else {
         rating = 1;
-        ratingDescription = 'You need to try harder!'
+        ratingDescription = 'You need to try harder!';
     }
 
     return {
@@ -59,15 +59,15 @@ const calculateExercises = (dailyExerciseHours: number[], target: number): Resul
         ratingDescription: ratingDescription,
         target: target,
         average: average
-    }
-}
+    };
+};
 
 try {
   const { targetValue, dailyValue } = validateArguments(process.argv);
   const result = calculateExercises(dailyValue, targetValue);
-  console.log(result)
+  console.log(result);
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
