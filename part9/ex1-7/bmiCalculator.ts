@@ -15,7 +15,7 @@ const validateInputs = (args: string[]): UserInput => {
     } else {
         throw new Error('Provided values were not numbers!');
     }
-    }
+}
 
 const calculateBmi = (height: number, weight: number): string => {
     const bmi: number = (weight/(height)**2) * 10000
@@ -51,3 +51,5 @@ try {
     }
     console.log(errorMessage);
 }
+
+export { calculateBmi };
