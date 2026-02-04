@@ -1,5 +1,24 @@
-const calculateBmi = (a: number, b: number): string => {
-    const bmi: number = (b/(a)**2) * 10000
+interface UserInput {
+    heightValue: number;
+    weightValue: number;
+}
+
+const validateInputs = (args: string[]): UserInput => {
+    if (args.length < 4) throw new Error('Not enough arguments');
+    if (args.length > 4) throw new Error('Too many arguments');
+    
+    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+        return {
+        heightValue: Number(args[2]),
+        weightValue: Number(args[3])
+        }
+    } else {
+        throw new Error('Provided values were not numbers!');
+    }
+    }
+
+const calculateBmi = (height: number, weight: number): string => {
+    const bmi: number = (weight/(height)**2) * 10000
     if (bmi < 16) {
         return 'Severe Thinness'
     }else if (bmi >= 16 && bmi < 17) {
@@ -19,4 +38,14 @@ const calculateBmi = (a: number, b: number): string => {
     }
 }
 
-console.log(calculateBmi(180, 75))
+try {
+    const { weightValue, heightValue } = validateInputs(process.argv)
+    const result = calculateBmi(heightValue, weightValue)
+    console.log(result)
+} catch (error:unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+        errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
+}
