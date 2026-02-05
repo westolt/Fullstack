@@ -22,13 +22,15 @@ app.get('/bmi', (req, res) => {
     res.json({height, weight, bmi});
 });
 
+interface ExerciseRequest {
+  daily_exercises: number[];
+  target: number;
+}
+
 app.post('/exercises', (req, res) => {
 
-     
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const body: any = req.body;
+    const body = req.body as ExerciseRequest;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { daily_exercises, target } = body;
 
     if (!daily_exercises || target === undefined) {
@@ -43,10 +45,9 @@ app.post('/exercises', (req, res) => {
         return res.status(400).json({ error: 'malformatted parameters' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const result = calculateExercises(daily_exercises, target);
 
-    res.json({ result });
+    return res.json({ result });
 });
 
 
