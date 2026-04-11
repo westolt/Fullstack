@@ -1,0 +1,11 @@
+.input-column {
+    display: 'flex';
+    flex-direction: 'column';
+}
+
+.input-row {
+    display: flex;
+    flex-direction: 'row';
+    gap: 5px;
+    padding: 2px;
+}

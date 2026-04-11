@@ -1,0 +1,17 @@
+.diary-set {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.diary-column {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+}
