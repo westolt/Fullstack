@@ -9,3 +9,7 @@
     gap: 5px;
     padding: 2px;
 }
+
+.error {
+    color: red;
+}

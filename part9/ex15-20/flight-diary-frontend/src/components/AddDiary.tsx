@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import type { Diary } from '../types'
 import diaryService from '../services/diaries'
 import './AddDiary.css'
@@ -13,6 +14,7 @@ const AddDiary = ({ diaries, setDiaries } : Props ) => {
     const [visibility, setVisibility] = useState('');
     const [weather, setWeather] = useState('');
     const [comment, setComment] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const diaryCreation = async (event: React.SyntheticEvent) => {
         event.preventDefault()
@@ -31,34 +33,80 @@ const AddDiary = ({ diaries, setDiaries } : Props ) => {
             setWeather('');
             setComment('');
         } catch (error) {
-            console.error("Failed to create diary", error);
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data;
+                setErrorMessage(message);
+
+                setTimeout(() => {
+                    setErrorMessage(null);
+                }, 4000);
+
+            } else {
+                setErrorMessage("Unexpected error");
+
+                setTimeout(() => {
+                    setErrorMessage(null);
+                }, 4000);
+            }
         }
     }
 
     return(
         <div>
             <h2>Add new entry</h2>
+            <div className="error">
+                {errorMessage}
+            </div>
             <form onSubmit={diaryCreation} className='input-column'>
                 <div className='input-row'>
                     <label>date</label>
                     <input
+                    type='date'
                     value={date}
                     onChange={(event) => setDate(event.target.value)}
                     />
                 </div>
                 <div className='input-row'>
                     <label>visibility</label>
-                    <input
-                    value={visibility}
-                    onChange={(event) => setVisibility(event.target.value)}
-                    />
+                    <div>
+                        <input type='radio' name='visibility' value='great' checked={visibility === 'great'} onChange={(event) => setVisibility(event.target.value)} />
+                        <label>great</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='visibility' value='good' checked={visibility === 'good'} onChange={(event) => setVisibility(event.target.value)} />
+                        <label>good</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='visibility' value='ok' checked={visibility === 'ok'} onChange={(event) => setVisibility(event.target.value)} />
+                        <label>ok</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='visibility' value='poor' checked={visibility === 'poor'} onChange={(event) => setVisibility(event.target.value)} />
+                        <label>poor</label>
+                    </div>
                 </div>
                 <div className='input-row'>
                     <label>weather</label>
-                    <input
-                    value={weather}
-                    onChange={(event) => setWeather(event.target.value)}
-                    />
+                    <div>
+                        <input type='radio' name='weather' value='sunny' checked={weather === 'sunny'} onChange={(event) => setWeather(event.target.value)} />
+                        <label>sunny</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='weather' value='rainy' checked={weather === 'rainy'} onChange={(event) => setWeather(event.target.value)} />
+                        <label>rainy</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='weather' value='cloudy' checked={weather === 'cloudy'} onChange={(event) => setWeather(event.target.value)} />
+                        <label>cloudy</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='weather' value='stormy' checked={weather === 'stormy'} onChange={(event) => setWeather(event.target.value)} />
+                        <label>stormy</label>
+                    </div>
+                    <div>
+                        <input type='radio' name='weather' value='windy' checked={weather === 'windy'} onChange={(event) => setWeather(event.target.value)} />
+                        <label>windy</label>
+                    </div>
                 </div>
                 <div className='input-row'>
                     <label>comment</label>
