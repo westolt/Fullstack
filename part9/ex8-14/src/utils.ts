@@ -1,4 +1,4 @@
-import { NewPatient } from './types/patient';
+import { NewPatient } from './types';
 import { z } from 'zod';
 
 export const NewEntrySchema = z.object({
